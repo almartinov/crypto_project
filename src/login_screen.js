@@ -4,9 +4,9 @@ import { MDBBtn, MDBContainer, MDBBtnGroup, MDBCard, MDBCardBody, MDBCardTitle }
 import {CreateMnemonic} from './crypto'
 import { useRef, useEffect, useContext } from "react"
 import { Input, initMDB } from "mdb-ui-kit"
+import { loadFromStorage} from './storage.js'
 
-
-function LoginScreen({page,setPage}){
+function LoginScreen({page, setPage, g_wallet, g_setWallet}){
   initMDB({ Input });
   const [name, setName] = useState("");
   const [pwd, setPwd] = useState("");
@@ -17,8 +17,18 @@ function LoginScreen({page,setPage}){
     if (name==""){
       alert("Name can't be blank")
     }
+    else if (pwd==""){
+      alert("Password can't be blank")
+    }
     else{
+        const wallet = await loadFromStorage(name,pwd)
+        if (wallet){
+        g_setWallet(wallet)
         setPage('wallet');
+        }
+        else {
+            alert("No such wallet")
+        }
     }
   }
     return (

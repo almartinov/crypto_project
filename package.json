@@ -4,6 +4,7 @@
   "description": "template for mdb-react-ui-kit",
   "private": true,
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "eslint": "^8.57.0",
     "ethers": "^6.11.1",
     "mdb-react-ui-kit": "7.2.0",

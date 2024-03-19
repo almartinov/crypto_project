@@ -10,6 +10,7 @@ function RestoreScreen({page,setPage}){
   const [mnemonic, setMnemonic] = useState("");
 
   const handleSubmit = async (e) => {
+        localStorage.setItem("set_local","hello");
         setPage('wallet');
     }
     return (

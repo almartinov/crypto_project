@@ -9,16 +9,17 @@ import RestoreScreen from './restore_screen.js';
 
 function App() {
   const [page, setPage] = useState('home')
+  const [g_wallet, g_setWallet] = useState({id:"",mnemonic:"",message:""})
 
   switch (page) {
     case 'home':
-      return (<Home page={page} setPage={setPage} />);
+      return (<Home page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'create':
-      return(<CreateScreen page={page} setPage={setPage}/>);
+      return(<CreateScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'wallet':
-      return (<WalletScreen page={page} setPage={setPage} />);
+      return (<WalletScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'login':
-      return (<LoginScreen page={page} setPage={setPage} />);
+      return (<LoginScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'restore':
       return (<RestoreScreen inScreen page={page} setPage={setPage} />);
     default:
