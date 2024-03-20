@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MDBBtn, MDBContainer, MDBBtnGroup, MDBCard, MDBCardBody, MDBCardTitle } from 'mdb-react-ui-kit';
-import {CreateMnemonic} from './crypto'
+import {CreateMnemonic, InitWallets} from './crypto'
 import { useRef, useEffect, useContext } from "react"
 import { Input, initMDB } from "mdb-ui-kit"
 import { loadFromStorage, saveToStorage} from './storage.js'
@@ -34,11 +34,7 @@ function CreateScreen({page,setPage, g_wallet, g_setWallet}){
                 const random_mnem = await CreateMnemonic();
                 setMnemonic(<textarea className="form-control" id="textAreaExample" rows="4" 
                     value={random_mnem} readOnly ></textarea>);
-                const wallet = {
-                    id: name,
-                    mnemonic: random_mnem,
-                    message: "hello"
-                }
+                const wallet = await InitWallets(name, random_mnem)
                 saveToStorage(name,wallet,pwd);
                 g_setWallet(wallet)
                 setGobtn("Next")

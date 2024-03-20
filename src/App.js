@@ -9,7 +9,8 @@ import RestoreScreen from './restore_screen.js';
 
 function App() {
   const [page, setPage] = useState('home')
-  const [g_wallet, g_setWallet] = useState({id:"",mnemonic:"",message:""})
+  const [g_wallet, g_setWallet] = useState({mnemonic:"",name:"",mainnet:{},testnet:{}})
+  const [ready,setReady] = useState(false)
 
   switch (page) {
     case 'home':
@@ -17,11 +18,11 @@ function App() {
     case 'create':
       return(<CreateScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'wallet':
-      return (<WalletScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
+      return (<WalletScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet} ready={ready} setReady={setReady}/>);
     case 'login':
       return (<LoginScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     case 'restore':
-      return (<RestoreScreen inScreen page={page} setPage={setPage} />);
+      return (<RestoreScreen inScreen page={page} setPage={setPage} g_wallet={g_wallet} g_setWallet={g_setWallet}/>);
     default:
       return <div>Error: Unknown Screen</div>;
 }
