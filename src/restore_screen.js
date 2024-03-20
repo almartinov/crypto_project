@@ -14,6 +14,9 @@ function RestoreScreen({page,setPage,g_wallet,g_setWallet}){
   const [mnemonic,setMnemonic] = useState("")
   const [gobtn,setGobtn] = useState("Restore")
 
+  useEffect(() => {
+    setUp("a")
+},[])
 
   const handleSubmit = async (e) => {
       if(gobtn == "Restore"){
@@ -72,6 +75,9 @@ function RestoreScreen({page,setPage,g_wallet,g_setWallet}){
       <label className="form-label" htmlFor="form1Example3">Confirm Password</label>
       </div>
 
+      <textarea className="form-control" id="textAreaExample" rows="4" 
+        placeholder='Mnemonic' onChange={e => setMnemonic(e.target.value)} ></textarea>
+      <div className="container h-10 d-flex align-items-center justify-content-center mt-4" ></div>
       {/* Submit button  */}
       <MDBBtn
       tag='a'
@@ -82,9 +88,8 @@ function RestoreScreen({page,setPage,g_wallet,g_setWallet}){
       >{gobtn}</MDBBtn>
       </form>
       <div></div>
-      <div className="container h-10 d-flex align-items-center justify-content-center mt-4" ></div>
-      <textarea className="form-control" id="textAreaExample" rows="4" 
-        placeholder='Mnemonic' onChange={e => setMnemonic(e.target.value)} ></textarea>
+      <div className="container h-10 d-flex align-items-center justify-content-center mt-3" ></div>
+
       <div><a href="" onClick={() => setPage("home")}>Go back</a></div>
       </MDBCardBody>
       </div>

@@ -14,7 +14,9 @@ function CreateScreen({page,setPage, g_wallet, g_setWallet}){
     const [mnemonic,setMnemonic] = useState(<div></div>)
     const [gobtn,setGobtn] = useState("Create Menomic")
 
-
+    useEffect(() => {
+        setUp("a")
+    },[])
     const handleSubmit = async (e) => {
         if(gobtn == "Create Menomic"){
             if (pwd == ""){

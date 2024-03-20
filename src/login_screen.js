@@ -12,7 +12,9 @@ function LoginScreen({page, setPage, g_wallet, g_setWallet}){
   const [pwd, setPwd] = useState("");
   const [up,setUp] = useState("");
 
-
+  useEffect(() => {
+    setUp("a")
+},[])
   const handleSubmit = async (e) => {
     if (name==""){
       alert("Name can't be blank")
