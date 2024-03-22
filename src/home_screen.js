@@ -8,7 +8,7 @@ function Home({page,setPage}){
         <div className="container-xl">
         <div className="container h-10 d-flex align-items-center justify-content-center mt-5" ></div>
         <div className="container h-10 d-flex align-items-center justify-content-center mt-5" >
-        <div className="card " style={{width:"40%"}}>
+        <div className="card " style={{minWidth:"500px"}}>
         <MDBCardBody>
         <MDBCardTitle>HD Wallet</MDBCardTitle>
         <div className="d-grid gap-2">

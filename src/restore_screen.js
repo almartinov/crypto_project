@@ -51,7 +51,7 @@ function RestoreScreen({page,setPage,g_wallet,g_setWallet}){
       <div className="container-xl">
       <div className="container h-10 d-flex align-items-center justify-content-center mt-5" ></div>
       <div className="container h-10 d-flex align-items-center justify-content-center mt-5" >
-      <div className="card" style={{width:"40%"}}>
+      <div className="card" style={{minWidth:"500px"}}>
       <MDBCardBody>
       <MDBCardTitle>Wallet Creation</MDBCardTitle>
       <form>
