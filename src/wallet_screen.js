@@ -1,7 +1,14 @@
 
 import React, { useState } from 'react';
-import { MDBBtn, MDBContainer, MDBBtnGroup, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography  } from 'mdb-react-ui-kit';
-import {CreateMnemonic, getBalance, gen_new, getPrice} from './crypto'
+import { MDBBtn, MDBContainer, MDBBtnGroup, MDBCard, MDBCardBody, MDBCardTitle, MDBInput, MDBInputGroup, MDBTypography,
+    MDBModal,
+  MDBModalDialog,
+  MDBModalContent,
+  MDBModalHeader,
+  MDBModalTitle,
+  MDBModalBody,
+  MDBModalFooter,  } from 'mdb-react-ui-kit';
+import {CreateMnemonic, getBalance, gen_new, getPrice, send} from './crypto'
 import { useRef, useEffect, useContext } from "react"
 import { Input, initMDB } from "mdb-ui-kit"
 import { coinList } from './coin_list';
@@ -15,9 +22,7 @@ function WalletScreen({page,setPage,g_wallet,g_setWallet,ready,setReady}){
     const [currentCoin, setCurrentCoin] = useState("");
     const [loading, setLoading] = useState(<h1>Loading...</h1>)
     const [enterOnce, setEnterOnce] = useState(0);
-    console.log("rendering screen")
     if (enterOnce == 0){
-        console.log("entered if")
         setEnterOnce(1)
         getBalance(g_wallet).then((bal) => {setBalance(bal)}).then(() =>{setLoading(<div></div>);})
         getPrice().then((price) => {setPrices(price)})
@@ -115,19 +120,42 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
     const [amountCoin, setAmountCoin] = useState("");
     const [amountUSD,setAmountUSD] = useState("");  
     const [errorMsg,setErrorMsg] = useState(<div></div>);  
+    const [sentMsg,setSentMsg] = useState(<div></div>);  
     const [sendToggle,setSendToggle] = useState("send");
+    const [centredModal, setCentredModal] = useState(false);
+    const [sendButton,setSendButton] = useState(true);
+    const toggleOpen = () => setCentredModal(!centredModal);
+    
     const badges ={
         mainnet: <span className="badge badge-primary rounded-pill d-inline">Mainnet</span>,
         testnet: <span className="badge badge-secondary rounded-pill d-inline">Testnet</span>
     }
+    const handleSend = async (e) => {
+        if(to==""){
+            alert("receiving address can't be empty")
+        }
+        else if(amountCoin==0 ||amountCoin==""){
+            alert("sent amount can't be zero")
+        }
+        else {
+            const txhash = await send(to,coin,amountCoin,wallet[net][coin].privateKey)
+            setSentMsg(<MDBTypography note noteColor='success'>
+            <strong>Success! </strong> Transaction hash: {txhash}
+          </MDBTypography>)
+        }
+
+    }
+
     const checkBalanceDifference = async (e) => {
         if (amountCoin>balance[coin]){
             setErrorMsg( <MDBTypography note noteColor='warning'>
             <strong>warning:</strong> Insufficient Balance
           </MDBTypography>)
+          setSendButton(true)
         }
         else {
             setErrorMsg(<div></div>)
+            setSendButton(false)
         }
     }
     const net = coinList[coin].net
@@ -148,8 +176,9 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
             checkBalanceDifference();
             setAmountCoin(Math.floor(e.target.value/prices[coin]*10000)/10000)}} type='number' />
         </MDBInputGroup>
-        <button className="btn btn-primary" type="button" onClick={() => console.log("sent :)")}>Send Transaction</button>
+        <button className="btn btn-primary" type="button" disabled={sendButton} onClick={() => toggleOpen()}>Send Transaction</button>
         {errorMsg}
+        {sentMsg}
         </div>)
 
     }
@@ -171,8 +200,33 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
             </div>
             </div>)
     }
+    const modal = <>
+    <MDBModal tabIndex='-1' open={centredModal} setOpen={setCentredModal}>
+        <MDBModalDialog centered>
+          <MDBModalContent>
+            <MDBModalHeader>
+              <MDBModalTitle>Confirm Transaction</MDBModalTitle>
+              <MDBBtn className='btn-close' color='none' onClick={toggleOpen}></MDBBtn>
+            </MDBModalHeader>
+            <MDBModalBody>
+              <p>
+                No going back now
+              </p>
+            </MDBModalBody>
+            <MDBModalFooter>
+              <MDBBtn color='secondary' onClick={toggleOpen}>
+                Cancel
+              </MDBBtn>
+              <MDBBtn onClick={() => {toggleOpen(); handleSend()}}>Send Transaction </MDBBtn>
+            </MDBModalFooter>
+          </MDBModalContent>
+        </MDBModalDialog>
+      </MDBModal>
+    </>
+
     return(
         <div>
+            {modal}
         <div className="d-flex justify-content-between">
         <h1 ><img
             src={coinList[coin].image}
@@ -202,5 +256,6 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
         </div>
         </div>)
 }
+
 
 export default WalletScreen;

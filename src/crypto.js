@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { coinList } from './coin_list'
 import axios from 'axios'
 
-const testeeng = true
+const testeeng = "test"
 
 export const CreateMnemonic = async () => {
     const randomWallet = ethers.Wallet.createRandom()
@@ -40,13 +40,24 @@ export const InitWallets = async (name, mnemonic) => {
 
 export const getBalance = async (wallet) =>
 {
-    if(testeeng){
+    if(testeeng=="offline"){
         return{
             ETH: 40.612,
             sETH: 11324.11,
             wETH: 1.3,
             ARB: 90200
         }
+    } else if (testeeng=="test"){
+        const providersETH = new ethers.providers.JsonRpcProvider(coinList["sETH"].provider)
+        const providerwETH = new ethers.providers.JsonRpcProvider(coinList["wETH"].provider)
+        const balancesETH = await providersETH.getBalance(wallet.testnet["sETH"].address)
+        const balancewETH = await providerwETH.getBalance(wallet.testnet["wETH"].address)
+        return{
+            ETH: 4000.0,
+            sETH: parseFloat(ethers.utils.formatEther(balancesETH)),
+            wETH: parseFloat(ethers.utils.formatEther(balancewETH)),
+            ARB: 90200
+        }   
     }
     const providerETH = new ethers.providers.JsonRpcProvider(coinList["ETH"].provider)
     const providersETH = new ethers.providers.JsonRpcProvider(coinList["sETH"].provider)
@@ -67,7 +78,7 @@ export const getBalance = async (wallet) =>
 
 export const getPrice = async () =>
 {
-    if(testeeng){
+    if(testeeng=="offline" || testeeng== "test"){
         return{
             ETH: 3323.012323,
             sETH: 9.2323,
@@ -84,7 +95,6 @@ export const getPrice = async () =>
             }
         }
     ).then(({data}) => {
-        console.log(data);
         ETHp=data["rate"]
     })
     const resARB = await axios.get(
@@ -94,7 +104,6 @@ export const getPrice = async () =>
             }
         }
     ).then(({data}) => {
-        console.log(data);
         ARBp=data["rate"]
     })
     return {
@@ -109,5 +118,19 @@ export const gen_new = async() => {
     const providersETH = new ethers.providers.JsonRpcProvider(coinList["sETH"].provider)
     const path = coinList["sETH"].derivation + "0/1"
     const wallet = ethers.Wallet.fromMnemonic("cloth finish fire talent twin crop glimpse mean middle inform theory success", path).connect(providersETH);
-    console.log(wallet)
+}
+
+export const send = async (address,coin,amount,privateKey) => {
+    const provider = new ethers.providers.JsonRpcProvider(coinList[coin].provider)
+
+    const signer  = new ethers.Wallet(privateKey,provider)
+    const tx = {
+        to: address,
+        value: ethers.utils.parseEther(amount),
+        gasLimit: 50000,
+        gasPrice: ethers.BigNumber.from("20000000000"),
+    }
+
+    const txHash = await signer.sendTransaction(tx)
+    return txHash.hash
 }

@@ -53,7 +53,7 @@ function RestoreScreen({page,setPage,g_wallet,g_setWallet}){
       <div className="container h-10 d-flex align-items-center justify-content-center mt-5" >
       <div className="card" style={{minWidth:"500px"}}>
       <MDBCardBody>
-      <MDBCardTitle>Wallet Creation</MDBCardTitle>
+      <MDBCardTitle>Wallet Restoration</MDBCardTitle>
       <form>
       {/* email */}
       <div data-mdb-input-init className="form-outline mb-4">
