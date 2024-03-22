@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { coinList } from './coin_list'
 import axios from 'axios'
 
-const testeeng = "test"
+const testeeng = "run"
 
 export const CreateMnemonic = async () => {
     const randomWallet = ethers.Wallet.createRandom()
