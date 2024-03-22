@@ -32,7 +32,7 @@ function WalletScreen({page,setPage,g_wallet,g_setWallet,ready,setReady}){
         currentDisplay = (<CoinTable balance={balance} prices={prices} setCurrentCoin={setCurrentCoin}/>)
     }
     else{
-        currentDisplay = (<CoinDisplay coin={currentCoin} balance={balance} wallet={g_wallet} prices={prices} setCurrentCoin={setCurrentCoin}/>)
+        currentDisplay = (<CoinDisplay coin={currentCoin} balance={balance} wallet={g_wallet} prices={prices} setCurrentCoin={setCurrentCoin} setEnterOnce={setEnterOnce}/>)
 
     }
     const walletOverview = (
@@ -114,13 +114,14 @@ function TableEntry({coin, balance, prices,setCurrentCoin}){
     )
 }
 
-function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
+function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin,setEnterOnce}){
     initMDB({ Input });
     const [to, setTo] = useState("");
     const [amountCoin, setAmountCoin] = useState("");
     const [amountUSD,setAmountUSD] = useState("");  
     const [errorMsg,setErrorMsg] = useState(<div></div>);  
-    const [sentMsg,setSentMsg] = useState(<div></div>);  
+    const [sentMsg,setSentMsg] = useState(<div></div>);
+    const [copyMsg,setCopy] = useState(<div></div>);  
     const [sendToggle,setSendToggle] = useState("send");
     const [centredModal, setCentredModal] = useState(false);
     const [sendButton,setSendButton] = useState(true);
@@ -142,6 +143,7 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
             setSentMsg(<MDBTypography note noteColor='success'>
             <strong>Success! </strong> Transaction hash: {txhash}
           </MDBTypography>)
+        //   setEnterOnce(0)
         }
 
     }
@@ -185,11 +187,15 @@ function CoinDisplay({coin,balance,wallet,prices,setCurrentCoin}){
     else {
         currentDisplay = (<div className="d-grid gap-4">
             <MDBBtnGroup aria-label='Basic example'>
-            <MDBBtn href='#'  color='light'  onClick={() => setSendToggle("send")}>send</MDBBtn>
+            <MDBBtn href='#'  color='light'  onClick={() => {setSendToggle("send"); setCopy(<div></div>)}}>send</MDBBtn>
             <MDBBtn href='#' active>Receive</MDBBtn>
             </MDBBtnGroup>
             <MDBInput label='Click to copy address' id='formControlDisabled' type='text' value={wallet[net][coin].address} 
-                onClick={() => {navigator.clipboard.writeText(wallet[net][coin].address)}}readonly />
+                onClick={() => {navigator.clipboard.writeText(wallet[net][coin].address); 
+                    setCopy(<MDBTypography note noteColor='success'>
+                    <strong>Success! </strong> Copied address to clipboard!
+                  </MDBTypography> )}}readonly />
+            {copyMsg}
             <div style={{ height: "auto", margin: "0 auto", maxWidth: 256, width: "100%" }}>
             <QRCode
             size={256}
