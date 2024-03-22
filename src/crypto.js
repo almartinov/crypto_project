@@ -109,7 +109,7 @@ export const getPrice = async () =>
     return {
         ETH: ETHp,
         sETH: 0.0,
-        wETH: 0.0,
+        wETH: ETHp,
         ARB: ARBp
     }
 }
